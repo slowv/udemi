@@ -1,0 +1,19 @@
+name: Udemi
+
+services:
+  postgresql_udemi:
+    container_name: postgresql_udemi
+    image: postgres:16.2
+    environment:
+      - POSTGRES_USER=udemi
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=udemi
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: on-failure
+    ports:
+      - "5432:5432"
