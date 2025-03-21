@@ -30,7 +30,7 @@ public class UserEntity extends AbstractAuditingEntity<Long> implements Serializ
     @Column(unique = true, nullable = false, name = "username")
     String username;
 
-    @Column(unique = true, name = "password")
+    @Column( name = "password")
     String password;
 
     @Column(name = "first_name")
@@ -42,9 +42,9 @@ public class UserEntity extends AbstractAuditingEntity<Long> implements Serializ
     @Column(unique = true, name = "email")
     String email;
 
-    @Column(unique = true, name = "phone")
+    @Column(name = "phone")
     String phone;
 
-    @Column(unique = true, name = "address")
+    @Column(name = "address")
     String address;
 }

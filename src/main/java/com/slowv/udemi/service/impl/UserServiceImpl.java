@@ -1,5 +1,6 @@
 package com.slowv.udemi.service.impl;
 
+import com.slowv.udemi.controller.errors.EmailExistException;
 import com.slowv.udemi.repository.UserRepository;
 import com.slowv.udemi.service.UserService;
 import com.slowv.udemi.service.dto.UserDto;
@@ -36,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(final UserDto dto) {
+        if (userRepository.existsByEmailOrUsername(dto.getEmail(), dto.getUsername())) {
+            throw new EmailExistException("Email or Username already exist!");
+        }
         return UserDto.fromUser(userRepository.save(dto.toEntity()));
     }
 
