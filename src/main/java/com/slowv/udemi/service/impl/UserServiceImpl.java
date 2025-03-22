@@ -1,20 +1,18 @@
 package com.slowv.udemi.service.impl;
 
 import com.slowv.udemi.controller.errors.EmailExistException;
-import com.slowv.udemi.controller.errors.FieldValidationException;
-import com.slowv.udemi.entity.UserEntity;
 import com.slowv.udemi.integration.storage.MinioService;
 import com.slowv.udemi.integration.storage.model.UploadFileAgrs;
 import com.slowv.udemi.repository.UserRepository;
 import com.slowv.udemi.service.UserService;
 import com.slowv.udemi.service.dto.UserDto;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -24,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final MinioService minioService;
+    private final Validator validator;
 
     private static final String USER_NOT_FOUND_MESSAGE = "User not found";
 
@@ -45,7 +44,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(final UserDto dto) {
-        validateUser(dto);
+        final var constraintViolations = validator.validate(dto);
+
+        if (!constraintViolations.isEmpty()) {
+            throw new ConstraintViolationException(constraintViolations);
+        }
 
         if (userRepository.existsByEmailOrUsername(dto.getEmail(), dto.getUsername())) {
             throw new EmailExistException("Email or Username already exist!");
@@ -60,27 +63,6 @@ public class UserServiceImpl implements UserService {
         );
         entity.setAvatarUrl(avatarUrl);
         return UserDto.fromUser(userRepository.save(entity));
-    }
-
-    private void validateUser(final UserDto dto) {
-        final var errors = new HashMap<String, Object>();
-
-        // Validate field
-        if (ObjectUtils.isEmpty(dto.getUsername())) {
-            errors.put("username", "Username is required!");
-        }
-
-        if (ObjectUtils.isEmpty(dto.getEmail())) {
-            errors.put("email", "Email is required!");
-        }
-
-        if (ObjectUtils.isEmpty(dto.getAvatar()) || dto.getAvatar().getSize() == 0) {
-            errors.put("avatar", "Avatar is required!");
-        }
-
-        if (!errors.isEmpty()) {
-            throw new FieldValidationException(HttpStatus.BAD_REQUEST.getReasonPhrase(), errors);
-        }
     }
 
     @Override

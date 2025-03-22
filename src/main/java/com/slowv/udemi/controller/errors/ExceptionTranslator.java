@@ -1,10 +1,16 @@
 package com.slowv.udemi.controller.errors;
 
 import com.slowv.udemi.service.dto.response.ErrorResponse;
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.data.util.Pair;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ExceptionTranslator {
@@ -17,6 +23,26 @@ public class ExceptionTranslator {
     @ExceptionHandler(FieldValidationException.class)
     public ErrorResponse<Map<String, Object>> handleFieldValidationException(FieldValidationException e) {
         return ErrorResponse.badRequest(e.getErrors());
+    }
+
+//    @Override
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+        return ResponseEntity.badRequest()
+                .body(ErrorResponse.badRequest(errors));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ErrorResponse<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
+        return ErrorResponse.badRequest(
+                ex.getConstraintViolations()
+                        .stream()
+                        .map(constraintViolation -> Pair.of(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage()))
+                        .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond))
+        );
     }
 
     @ExceptionHandler(Exception.class)
