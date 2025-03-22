@@ -35,5 +35,11 @@ spring:
       hibernate.query.fail_on_pagination_over_collection_fetch: true
       hibernate.query.in_clause_parameter_padding: true
 
+integration:
+  minio:
+    access-key: admin
+    secret-key: admin@2024
+    url: http://localhost:9000
+
 server:
   port: 8080

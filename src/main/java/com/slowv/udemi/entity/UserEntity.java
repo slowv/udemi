@@ -47,4 +47,7 @@ public class UserEntity extends AbstractAuditingEntity<Long> implements Serializ
 
     @Column(name = "address")
     String address;
+
+    @Column(name = "avatar_url", columnDefinition = "TEXT")
+    String avatarUrl;
 }

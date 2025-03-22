@@ -1,6 +1,19 @@
 name: Udemi
 
 services:
+  minio:
+    image: bitnami/minio:latest
+    container_name: minio_udemi
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin@2024
+    volumes:
+      - ./data:/bitnami/minio/data
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    command: minio server /bitnami/minio/data --console-address ":9001"
+
   postgresql_udemi:
     container_name: postgresql_udemi
     image: postgres:16.2
@@ -17,3 +30,7 @@ services:
     restart: on-failure
     ports:
       - "5432:5432"
+
+volumes:
+  data:
+    driver: local
