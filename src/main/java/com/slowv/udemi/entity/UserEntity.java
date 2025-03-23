@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,7 +32,7 @@ public class UserEntity extends AbstractAuditingEntity<Long> implements Serializ
     @Column(unique = true, nullable = false, name = "username")
     String username;
 
-    @Column( name = "password")
+    @Column(name = "password")
     String password;
 
     @Column(name = "first_name")
@@ -45,9 +47,10 @@ public class UserEntity extends AbstractAuditingEntity<Long> implements Serializ
     @Column(name = "phone")
     String phone;
 
-    @Column(name = "address")
-    String address;
-
     @Column(name = "avatar_url", columnDefinition = "TEXT")
     String avatarUrl;
+
+    @OneToOne
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    AddressEntity address;
 }

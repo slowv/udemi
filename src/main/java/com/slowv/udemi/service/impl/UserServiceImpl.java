@@ -6,9 +6,9 @@ import com.slowv.udemi.integration.storage.model.UploadFileAgrs;
 import com.slowv.udemi.repository.UserRepository;
 import com.slowv.udemi.service.UserService;
 import com.slowv.udemi.service.dto.UserDto;
+import com.slowv.udemi.service.mapper.UserMapper;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final MinioService minioService;
     private final Validator validator;
+    private final UserMapper userMapper;
 
     private static final String USER_NOT_FOUND_MESSAGE = "User not found";
 
@@ -31,14 +32,14 @@ public class UserServiceImpl implements UserService {
         log.info("Find all users");
         return userRepository.findAll()
                 .stream()
-                .map(UserDto::fromUser)
+                .map(userMapper::toDto)
                 .toList();
     }
 
     @Override
     public UserDto getUser(final Long id) {
         return userRepository.findById(id)
-                .map(UserDto::fromUser)
+                .map(userMapper::toDto)
                 .orElseThrow(() -> new RuntimeException(USER_NOT_FOUND_MESSAGE));
     }
 
@@ -54,7 +55,7 @@ public class UserServiceImpl implements UserService {
             throw new EmailExistException("Email or Username already exist!");
         }
 
-        final var entity = dto.toEntity();
+        final var entity = userMapper.toEntity(dto);
         final var avatarUrl = minioService.upload(
                 UploadFileAgrs.builder()
                         .file(dto.getAvatar())
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
                         .build()
         );
         entity.setAvatarUrl(avatarUrl);
-        return UserDto.fromUser(userRepository.save(entity));
+        return userMapper.toDto(userRepository.save(entity));
     }
 
     @Override
@@ -74,8 +75,7 @@ public class UserServiceImpl implements UserService {
         userExist.setFirstName(dto.getFirstName());
         userExist.setLastName(dto.getLastName());
         userExist.setPhone(dto.getPhone());
-        userExist.setAddress(dto.getAddress());
-        return UserDto.fromUser(userRepository.save(userExist));
+        return userMapper.toDto(userRepository.save(userExist));
     }
 
     @Override
