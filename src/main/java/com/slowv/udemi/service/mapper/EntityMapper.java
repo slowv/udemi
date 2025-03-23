@@ -1,5 +1,11 @@
 package com.slowv.udemi.service.mapper;
 
+import org.mapstruct.BeanMapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
+import org.mapstruct.NullValueCheckStrategy;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+
 import java.util.List;
 
 public interface EntityMapper<D, E> {
@@ -11,14 +17,10 @@ public interface EntityMapper<D, E> {
 
     List<E> toEntity(List<D> dtos);
 
-//    @Named(value = "update")
-//    @BeanMapping(
-//            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-//            nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-//    void update(D dto, @MappingTarget E entity);
-//
-//    @BeanMapping(
-//            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-//            nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-//    void updateDto(@MappingTarget D dto, E entity);
+    @Named(value = "update")
+    @BeanMapping(
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+            nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
+    )
+    void update(D dto, @MappingTarget E entity);
 }

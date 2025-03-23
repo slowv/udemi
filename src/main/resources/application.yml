@@ -46,5 +46,11 @@ integration:
     secret-key: admin@2024
     url: http://localhost:9000
 
+logging:
+  level:
+    ROOT: INFO
+    org.hibernate.SQL: INFO
+    com.slowv.udemi: INFO
+
 server:
   port: 8080

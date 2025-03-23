@@ -70,11 +70,9 @@ public class UserServiceImpl implements UserService {
     public UserDto update(final Long id, final UserDto dto) {
         final var userExist = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(USER_NOT_FOUND_MESSAGE));
-        userExist.setId(dto.getId());
-        userExist.setEmail(dto.getEmail());
-        userExist.setFirstName(dto.getFirstName());
-        userExist.setLastName(dto.getLastName());
-        userExist.setPhone(dto.getPhone());
+
+        userMapper.update(dto, userExist);
+
         return userMapper.toDto(userRepository.save(userExist));
     }
 

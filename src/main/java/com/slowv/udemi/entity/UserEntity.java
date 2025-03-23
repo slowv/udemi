@@ -1,5 +1,6 @@
 package com.slowv.udemi.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -50,7 +51,7 @@ public class UserEntity extends AbstractAuditingEntity<Long> implements Serializ
     @Column(name = "avatar_url", columnDefinition = "TEXT")
     String avatarUrl;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     AddressEntity address;
 }

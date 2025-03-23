@@ -6,13 +6,12 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.springframework.util.ObjectUtils;
 
 @Mapper(
-        componentModel = MappingConstants.ComponentModel.SPRING,
+        config = DefaultMapperConfig.class,
         uses = {AddressMapper.class},
         imports = {ObjectUtils.class}
 )
