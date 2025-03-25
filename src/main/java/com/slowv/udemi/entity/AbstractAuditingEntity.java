@@ -29,7 +29,7 @@ public abstract class AbstractAuditingEntity<ID> implements Serializable {
     @Comment("Được tạo bởi account nào")
     @CreatedBy
     @Column(name = "created_by", nullable = false, length = 50, updatable = false)
-    private String createdBy = "System";
+    private String createdBy = "system";
 
     @Comment("Được tạo ngày nào")
     @CreatedDate
@@ -44,7 +44,7 @@ public abstract class AbstractAuditingEntity<ID> implements Serializable {
     @Comment("Được cập nhật bởi account nào")
     @LastModifiedBy
     @Column(name = "last_modified_by", length = 50)
-    private String lastModifiedBy = "System";
+    private String lastModifiedBy = "system";
 
     public abstract ID getId();
 }
