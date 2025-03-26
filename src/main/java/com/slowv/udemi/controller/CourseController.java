@@ -3,6 +3,7 @@ package com.slowv.udemi.controller;
 
 import com.slowv.udemi.service.dto.RegisterCourseRecord;
 import com.slowv.udemi.service.dto.request.ChangeStatusRequest;
+import com.slowv.udemi.service.dto.request.GetTotalAmountMonthRequest;
 import com.slowv.udemi.service.dto.request.RegisterCourseFilterRequest;
 import com.slowv.udemi.service.dto.response.PagingResponse;
 import com.slowv.udemi.service.dto.response.Response;
@@ -10,6 +11,9 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Controller Khóa học
@@ -43,4 +47,13 @@ public interface CourseController {
      */
     @PostMapping
     Response<PagingResponse<RegisterCourseRecord>> getRegisterCourse(final @RequestBody @Valid RegisterCourseFilterRequest request);
+
+    @PostMapping("/ids")
+    Response<List<Long>> getIds(final @RequestBody @Valid RegisterCourseFilterRequest request);
+
+    @PostMapping("/get-total-amount")
+    Response<BigDecimal> getTotalAmount(final @RequestBody @Valid GetTotalAmountMonthRequest request);
+
+    @PostMapping("/get-lack-of-revenue")
+    Response<BigDecimal> getLackOfRevenue(final @RequestBody @Valid GetTotalAmountMonthRequest request);
 }

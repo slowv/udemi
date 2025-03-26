@@ -17,6 +17,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 //@Schema(description = "Đối tượng đăng ký khóa học")
 public record RegisterCourseRecord(
+        Long id,
 //        @Schema(description = "Email người đăng ký", example = "slowv@gmail.com")
         String email,
 //        @Schema(description = "Số điện thoại người đăng ký", example = "0349555602")
