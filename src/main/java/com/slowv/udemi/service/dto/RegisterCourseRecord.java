@@ -36,9 +36,11 @@ public record RegisterCourseRecord(
         String note,
 //        @Schema(description = "Học viên")
         AccountRecord student,
+        AccountRecord teacher,
 //        @Schema(description = "Danh sách bài học trong khóa học")
         List<LessonProcessRecord> lessonProcesses,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-        LocalDateTime createdDate
+        LocalDateTime createdDate,
+        String title
 ) implements Serializable {
 }

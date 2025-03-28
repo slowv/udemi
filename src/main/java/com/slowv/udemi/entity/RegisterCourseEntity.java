@@ -47,6 +47,10 @@ public class RegisterCourseEntity extends AbstractAuditingEntity<Long> implement
     @Column(name = "phone", nullable = false)
     String phone;
 
+    @Comment("Tên khóa học")
+    @Column(name = "title")
+    String title;
+
     @Comment("Tổng tiền của tất cả các khóa học đã chọn")
     @Column(name = "total_amount")
     BigDecimal totalAmount = BigDecimal.ZERO;
@@ -83,6 +87,6 @@ public class RegisterCourseEntity extends AbstractAuditingEntity<Long> implement
     AccountEntity teacher;
 
     @Comment("Tiến trình trạng thái bài học mặc định khi đăng ký đã lưu luôn vào bảng với status là NOT_STARTED")
-    @OneToMany(mappedBy = "registerCourse", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "registerCourse", cascade = CascadeType.ALL)
     List<LessonProcessEntity> lessonProcesses = new ArrayList<>();
 }

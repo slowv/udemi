@@ -2,6 +2,8 @@ package com.slowv.udemi.service;
 
 
 import com.slowv.udemi.service.dto.RegisterCourseRecord;
+import com.slowv.udemi.service.dto.request.AddLessonRequest;
+import com.slowv.udemi.service.dto.request.AssignRegisterCourseRequest;
 import com.slowv.udemi.service.dto.request.ChangeStatusRequest;
 import com.slowv.udemi.service.dto.request.GetTotalAmountMonthRequest;
 import com.slowv.udemi.service.dto.request.RegisterCourseFilterRequest;
@@ -23,4 +25,8 @@ public interface RegisterCourseService {
     BigDecimal getTotalAmount(GetTotalAmountMonthRequest request);
 
     BigDecimal getLackOfRevenue(GetTotalAmountMonthRequest request);
+
+    void assign(AssignRegisterCourseRequest request, Long id);
+
+    RegisterCourseRecord addLesson(List<AddLessonRequest> request, Long id);
 }

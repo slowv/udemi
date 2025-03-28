@@ -50,7 +50,7 @@ logging:
   level:
     ROOT: INFO
     org.hibernate.SQL: INFO
-    com.slowv.udemi: INFO
+    com.slowv.udemi: debug
 
 server:
   port: 8080

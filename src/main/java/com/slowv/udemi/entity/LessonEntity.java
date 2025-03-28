@@ -33,6 +33,9 @@ public class LessonEntity extends AbstractAuditingEntity<Long> implements Serial
     @SequenceGenerator(name = "sequence", sequenceName = "lesson_seq")
     Long id;
 
+    @Column(name = "title", nullable = false)
+    String title;
+
     @Column(name = "price", nullable = false)
     BigDecimal price = BigDecimal.ZERO;
 

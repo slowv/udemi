@@ -33,6 +33,7 @@ import java.util.List;
 })
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountEntity extends AbstractAuditingEntity<Long> {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
     @SequenceGenerator(name = "sequence", sequenceName = "account_seq")
@@ -55,6 +56,11 @@ public class AccountEntity extends AbstractAuditingEntity<Long> {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "account")
     @JoinColumn(name = "account_info_id", referencedColumnName = "id")
     AccountInfoEntity accountInfo;
+
+    public void setAccountInfo(AccountInfoEntity accountInfo) {
+        accountInfo.setAccount(this);
+        this.accountInfo = accountInfo;
+    }
 
     public void addRole(RoleEntity role) {
         if (ObjectUtils.isEmpty(roles)) {

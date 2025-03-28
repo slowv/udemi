@@ -3,6 +3,8 @@ package com.slowv.udemi.controller.impl;
 import com.slowv.udemi.controller.CourseController;
 import com.slowv.udemi.service.RegisterCourseService;
 import com.slowv.udemi.service.dto.RegisterCourseRecord;
+import com.slowv.udemi.service.dto.request.AddLessonRequest;
+import com.slowv.udemi.service.dto.request.AssignRegisterCourseRequest;
 import com.slowv.udemi.service.dto.request.ChangeStatusRequest;
 import com.slowv.udemi.service.dto.request.GetTotalAmountMonthRequest;
 import com.slowv.udemi.service.dto.request.RegisterCourseFilterRequest;
@@ -27,7 +29,8 @@ public class CourseControllerImpl implements CourseController {
 
     @Override
     public Response<Void> changeStatus(final ChangeStatusRequest request) {
-        return null;
+        registerCourseService.changeStatus(request);
+        return Response.noContent();
     }
 
     @Override
@@ -49,4 +52,17 @@ public class CourseControllerImpl implements CourseController {
     public Response<BigDecimal> getLackOfRevenue(final GetTotalAmountMonthRequest request) {
         return Response.ok(registerCourseService.getLackOfRevenue(request));
     }
+
+    @Override
+    public Response<String> assignTeacher(final AssignRegisterCourseRequest request, final Long id) {
+        registerCourseService.assign(request, id);
+        return Response.ok("Assign Success!!!");
+    }
+
+    @Override
+    public Response<RegisterCourseRecord> addLesson(final List<AddLessonRequest> request, final Long id) {
+        return Response.ok(registerCourseService.addLesson(request, id));
+    }
+
+
 }

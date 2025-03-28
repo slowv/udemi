@@ -14,6 +14,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -41,6 +43,8 @@ public class RegisterCourseFilterRequest extends FilterRequest<RegisterCourseEnt
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     LocalDateTime createdDate;
 
+    List<RegisterLessonStatus> statuses = new ArrayList<>();
+
     @Override
     public Specification<RegisterCourseEntity> specification() {
         return RegisterCourseSpecification.builder()
@@ -48,6 +52,8 @@ public class RegisterCourseFilterRequest extends FilterRequest<RegisterCourseEnt
                 .withRegisterType(registerType)
                 .withTotalAmountBetween(totalAmountFrom, totalAmountTo)
                 .withCreatedDateLessThanOrEqual(createdDate)
+                .withSearch(getSearch())
+                .withStatusIn(statuses)
                 .build();
     }
 }

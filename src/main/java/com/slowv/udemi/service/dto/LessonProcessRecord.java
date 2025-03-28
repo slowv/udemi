@@ -18,6 +18,8 @@ public record LessonProcessRecord(
         @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
         LocalDateTime createdDate,
         LocalDateTime lastModifiedDate,
-        String lastModifiedBy, Long id, ProcessStatus status
+        String lastModifiedBy,
+        LessonRecord lesson,
+        ProcessStatus status
 ) implements Serializable {
 }

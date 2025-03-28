@@ -1,5 +1,6 @@
 package com.slowv.udemi.entity;
 import com.slowv.udemi.entity.enums.ProcessStatus;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,7 +33,7 @@ public class LessonProcessEntity extends AbstractAuditingEntity<Long> implements
     Long id;
 
     @Comment("Bài học đăng ký")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "lesson_id", referencedColumnName = "id")
     LessonEntity lesson;
 

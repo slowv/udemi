@@ -1,14 +1,19 @@
 package com.slowv.udemi.controller;
 
 
+import com.slowv.udemi.service.dto.LessonProcessRecord;
 import com.slowv.udemi.service.dto.RegisterCourseRecord;
+import com.slowv.udemi.service.dto.request.AddLessonRequest;
+import com.slowv.udemi.service.dto.request.AssignRegisterCourseRequest;
 import com.slowv.udemi.service.dto.request.ChangeStatusRequest;
 import com.slowv.udemi.service.dto.request.GetTotalAmountMonthRequest;
 import com.slowv.udemi.service.dto.request.RegisterCourseFilterRequest;
 import com.slowv.udemi.service.dto.response.PagingResponse;
 import com.slowv.udemi.service.dto.response.Response;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -56,4 +61,16 @@ public interface CourseController {
 
     @PostMapping("/get-lack-of-revenue")
     Response<BigDecimal> getLackOfRevenue(final @RequestBody @Valid GetTotalAmountMonthRequest request);
+
+    @PutMapping("/{id}/assign")
+    Response<String> assignTeacher(
+            final @RequestBody @Valid AssignRegisterCourseRequest request,
+            @PathVariable final Long id
+    );
+
+    @PostMapping("/{id}/add-lesson")
+    Response<RegisterCourseRecord> addLesson(
+            final @RequestBody @Valid List<AddLessonRequest> request,
+            @PathVariable final Long id
+    );
 }

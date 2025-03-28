@@ -15,8 +15,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PagingResponse<T> {
-    List<T> contents = new ArrayList<>();
     PageableData paging;
+    List<T> contents = new ArrayList<>();
 
     public static <T> PagingResponse<T> from(Page<T> page) {
         final var response = new PagingResponse<T>();
