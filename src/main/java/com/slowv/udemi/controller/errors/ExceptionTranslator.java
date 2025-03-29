@@ -51,8 +51,8 @@ public class ExceptionTranslator {
         return ErrorResponse.badRequest(e.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ErrorResponse<String> handleException(Exception e) {
-        return ErrorResponse.internalServer(e.getMessage());
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ErrorResponse<String> handleException(Exception e) {
+//        return ErrorResponse.internalServer(e.getMessage());
+//    }
 }

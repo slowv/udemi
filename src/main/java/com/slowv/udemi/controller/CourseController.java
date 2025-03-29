@@ -11,6 +11,7 @@ import com.slowv.udemi.service.dto.request.RegisterCourseFilterRequest;
 import com.slowv.udemi.service.dto.response.PagingResponse;
 import com.slowv.udemi.service.dto.response.Response;
 import jakarta.validation.Valid;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,6 +33,7 @@ public interface CourseController {
      * @param request {@link RegisterCourseRecord} thông tin đăng ký khóa học
      * @return Message thông báo đăng ký thành công!
      */
+    @Secured({"STUDENT", "GUEST"})
     @PostMapping("/register")
     Response<RegisterCourseRecord> register(final @RequestBody @Valid RegisterCourseRecord request);
 
@@ -41,6 +43,7 @@ public interface CourseController {
      * @param request {@link ChangeStatusRequest}
      * @return No content {@code 204}
      */
+    @Secured({"TEACHER"})
     @PostMapping("/change-status")
     Response<Void> changeStatus(final @RequestBody @Valid ChangeStatusRequest request);
 
@@ -50,6 +53,7 @@ public interface CourseController {
      * @param request {@link RegisterCourseFilterRequest}
      * @return Page {@link RegisterCourseRecord}
      */
+    @Secured({"TEACHER", "STUDENT", "GUEST", "ADMIN"})
     @PostMapping
     Response<PagingResponse<RegisterCourseRecord>> getRegisterCourse(final @RequestBody @Valid RegisterCourseFilterRequest request);
 

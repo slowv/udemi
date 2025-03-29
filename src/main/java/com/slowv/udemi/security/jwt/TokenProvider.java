@@ -1,6 +1,8 @@
 package com.slowv.udemi.security.jwt;
 
 import com.slowv.udemi.config.properties.SecurityProperties;
+import com.slowv.udemi.entity.AccountEntity;
+import com.slowv.udemi.entity.RoleEntity;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -19,6 +21,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -49,14 +53,25 @@ public class TokenProvider {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-        long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+
         return Jwts
                 .builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity)
+                .setExpiration(Date.from(Instant.now().plus(15, ChronoUnit.MINUTES)))
+                .compact();
+    }
+
+    public String createRefreshToken(Authentication authentication) {
+        log.info("[TokenProvider:createRefreshToken] Token Creation Started for:{}", authentication.getName());
+
+        return Jwts
+                .builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, "REFRESH_TOKEN")
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(Date.from(Instant.now().plus(15, ChronoUnit.DAYS)))
                 .compact();
     }
 
@@ -90,5 +105,19 @@ public class TokenProvider {
         User principal = new User(claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, jwt, authorities);
+    }
+
+    public Authentication getAuthentication(final AccountEntity account) {
+        // Extract user details from UserDetailsEntity
+        String username = account.getEmail();
+        String password = account.getPassword();
+        final var authorities = account.getRoles()
+                .stream()
+                .map(RoleEntity::getName)
+                .map(Enum::name)
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+
+        return new UsernamePasswordAuthenticationToken(username, password, authorities);
     }
 }

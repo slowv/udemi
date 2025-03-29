@@ -8,7 +8,7 @@ import java.util.List;
 public record AccountRecord(
         String email,
         TokenRecord accessToken,
-//        TokenRecord refreshToken,
+        TokenRecord refreshToken,
         AccountInfoRecord accountInfo,
         List<String> roleNames
 ) {

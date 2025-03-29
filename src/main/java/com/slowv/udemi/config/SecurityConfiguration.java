@@ -1,15 +1,19 @@
 package com.slowv.udemi.config;
 
 import com.slowv.udemi.config.filter.JwtAccessTokenFilter;
+import com.slowv.udemi.config.filter.JwtRefreshTokenFilter;
 import com.slowv.udemi.security.SecurityProblemSupport;
 import com.slowv.udemi.security.jwt.TokenProvider;
+import com.slowv.udemi.service.AuthenticationService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,6 +29,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
     @Bean
@@ -55,6 +60,47 @@ public class SecurityConfiguration {
                                 .authenticationEntryPoint(problemSupport)
                 )
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .build();
+    }
+
+    @Bean
+    @Order(3)
+    public SecurityFilterChain refreshTokenSecurityFilterChain(HttpSecurity http, SecurityProblemSupport problemSupport, TokenProvider tokenProvider) throws Exception {
+        return http.securityMatcher(
+                        new AntPathRequestMatcher("/refresh-token", RequestMethod.POST.name())
+                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtRefreshTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> {
+                    ex.authenticationEntryPoint(problemSupport);
+                    ex.accessDeniedHandler(problemSupport);
+                })
+                .build();
+    }
+
+    @Order(4)
+    @Bean
+    public SecurityFilterChain logoutSecurityFilterChain(
+            HttpSecurity httpSecurity, AuthenticationService logoutService,
+            SecurityProblemSupport problemSupport, TokenProvider tokenProvider
+    ) throws Exception {
+        return httpSecurity
+                .securityMatcher(new AntPathRequestMatcher("/logout/**"))
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtAccessTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .addLogoutHandler(logoutService)
+                        .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext()))
+                )
+                .exceptionHandling(ex -> {
+                    ex.authenticationEntryPoint(problemSupport);
+                    ex.accessDeniedHandler(problemSupport);
+                })
                 .build();
     }
 
