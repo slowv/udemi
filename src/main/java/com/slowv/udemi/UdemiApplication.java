@@ -1,11 +1,13 @@
 package com.slowv.udemi;
 
 import com.slowv.udemi.config.properties.MinioProperties;
+import com.slowv.udemi.config.properties.SecurityProperties;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
 
@@ -13,7 +15,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @SpringBootApplication
-@EnableConfigurationProperties({MinioProperties.class})
+@EnableConfigurationProperties({MinioProperties.class, SecurityProperties.class})
 public class UdemiApplication {
 
     private static final Logger log = LoggerFactory.getLogger(UdemiApplication.class);
@@ -43,13 +45,13 @@ public class UdemiApplication {
 
         log.info(
                 """
-                ----------------------------------------------------------
-                Application '{}' is running! Access URLs:
-                Local     : {}://localhost:{}{}
-                External  : {}://{}:{}{}
-                Profile(s): {}
-                ----------------------------------------------------------
-                """,
+                        ----------------------------------------------------------
+                        Application '{}' is running! Access URLs:
+                        Local     : {}://localhost:{}{}
+                        External  : {}://{}:{}{}
+                        Profile(s): {}
+                        ----------------------------------------------------------
+                        """,
                 env.getProperty("spring.application.name"),
                 protocol,
                 serverPort,

@@ -10,8 +10,10 @@ public record SignUpRequest(
         String password,
         @NotBlank
         String firstName,
+        String phone,
         @NotBlank
         String lastName,
+        String introduce,
         MultipartFile avatar
 ) {
 }

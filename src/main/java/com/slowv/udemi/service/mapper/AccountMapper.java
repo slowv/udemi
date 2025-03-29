@@ -5,8 +5,10 @@ import com.slowv.udemi.entity.AccountEntity;
 import com.slowv.udemi.entity.RoleEntity;
 import com.slowv.udemi.entity.enums.TokenType;
 import com.slowv.udemi.service.dto.AccountRecord;
+import com.slowv.udemi.service.dto.request.SignUpRequest;
 import org.hibernate.type.descriptor.DateTimeUtils;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
@@ -28,6 +30,9 @@ public interface AccountMapper extends EntityMapper<AccountRecord, AccountEntity
 //    default TokenRecord toTokenRecord(Jwt token) {
 //        return new TokenRecord(token.getTokenValue(), DateTimeUtils.convertToLocalDateTime(token.getExpiresAt()), TokenType.Bearer.name());
 //    }
+
+    @Mapping(target = "password", ignore = true)
+    AccountEntity toEntity(SignUpRequest request);
 
     @Named("toRoleString")
     default List<String> toRoleString(List<RoleEntity> roles) {

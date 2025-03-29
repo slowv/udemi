@@ -1,7 +1,7 @@
 package com.slowv.udemi.service.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class StatusResponse {
     int code;
     String message;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", shape = JsonFormat.Shape.STRING)
     final LocalDateTime timestamp = LocalDateTime.now();
 
     private StatusResponse setCode(final int code) {

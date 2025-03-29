@@ -32,4 +32,16 @@ public final class ErrorResponse<T> {
                 .setStatus(StatusResponse.build(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase()))
                 .setError(error);
     }
+
+    public static <T> ErrorResponse<T> unauthorized(final T error) {
+        return new ErrorResponse<T>()
+                .setStatus(StatusResponse.build(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase()))
+                .setError(error);
+    }
+
+    public static <T> ErrorResponse<T> custom(final T error, HttpStatus status) {
+        return new ErrorResponse<T>()
+                .setStatus(StatusResponse.build(status.value(), status.getReasonPhrase()))
+                .setError(error);
+    }
 }

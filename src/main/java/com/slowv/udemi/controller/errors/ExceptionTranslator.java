@@ -4,6 +4,7 @@ import com.slowv.udemi.service.dto.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -43,6 +44,11 @@ public class ExceptionTranslator {
                         .map(constraintViolation -> Pair.of(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage()))
                         .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond))
         );
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ErrorResponse<?> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        return ErrorResponse.badRequest(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

@@ -48,6 +48,9 @@ public class AccountInfoEntity extends AbstractAuditingEntity<Long> implements S
     @Column(name = "phone")
     String phone;
 
+    @Column(name = "avatar_url", columnDefinition = "TEXT")
+    String avatarUrl;
+
     @OneToOne
     AccountEntity account;
 }
