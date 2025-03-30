@@ -59,6 +59,11 @@ jwt:
   jwtExpiration: ${JWT_EXPIRE:86400}
   rememberMeExpiration: ${JWT_EXPIRE:2592000}
 
+  rsa:
+    expire: 15
+    private-key: classpath:certs/privateKey.pem
+    public-key: classpath:certs/publicKey.pem
+
 
 server:
   port: 8080

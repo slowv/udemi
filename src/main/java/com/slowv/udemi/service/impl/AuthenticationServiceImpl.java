@@ -31,7 +31,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Objects;
+
 import static com.slowv.udemi.common.constant.AppConstants.KEY_SESSION_EMAIL_AUTH;
+import static com.slowv.udemi.security.jwt.TokenProvider.AUTHORITIES_KEY;
 
 @Service
 @RequiredArgsConstructor
@@ -59,25 +65,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         final var authentication = authenticationManagerBuilder.getObject().authenticate(usernamePasswordAuthenticationToken);
 
-        final var token = tokenProvider.createToken(authentication);
-        final var refreshToken = tokenProvider.createRefreshToken(authentication);
+        final var token = tokenProvider.createTokenRsa(authentication);
+        final var refreshToken = tokenProvider.createRefreshTokenRsa(authentication);
 
-        creatRefreshTokenCookie(response, refreshToken);
+        creatRefreshTokenCookie(response, refreshToken.getTokenValue());
+        final var roleString = (String) token.getClaim(AUTHORITIES_KEY);
 
         return new AccountRecord(
                 request.email(),
                 new TokenRecord(
-                        token,
-                        null,
+                        token.getTokenValue(),
+                        LocalDateTime.ofInstant(Objects.requireNonNull(token.getExpiresAt()), ZoneId.systemDefault()),
                         TokenType.Bearer.name()
                 ),
                 new TokenRecord(
-                        refreshToken,
-                        null,
+                        refreshToken.getTokenValue(),
+                        LocalDateTime.ofInstant(Objects.requireNonNull(refreshToken.getExpiresAt()), ZoneId.systemDefault()),
                         TokenType.Refresh.name()
                 ),
                 null,
-                null
+                List.of(roleString.split(","))
         );
     }
 
@@ -121,11 +128,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final var account = accountRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.valueOf(HttpStatus.UNAUTHORIZED.value())));
 
-        final var token = tokenProvider.createToken(tokenProvider.getAuthentication(account));
+        final var token = tokenProvider.createTokenRsa(tokenProvider.getAuthentication(account));
 
         return new TokenRecord(
-                token,
-                null,
+                token.getTokenValue(),
+                LocalDateTime.ofInstant(Objects.requireNonNull(token.getExpiresAt()), ZoneId.systemDefault()),
                 TokenType.Bearer.name()
         );
     }
