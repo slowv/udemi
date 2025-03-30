@@ -7,7 +7,7 @@ import com.slowv.udemi.entity.enums.RegisterType;
 import com.slowv.udemi.repository.specification.RegisterCourseSpecification;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,9 +16,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegisterCourseFilterRequest extends FilterRequest<RegisterCourseEntity> {
 
@@ -44,6 +45,20 @@ public class RegisterCourseFilterRequest extends FilterRequest<RegisterCourseEnt
     LocalDateTime createdDate;
 
     List<RegisterLessonStatus> statuses = new ArrayList<>();
+
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+        final RegisterCourseFilterRequest that = (RegisterCourseFilterRequest) object;
+        return Objects.equals(courseId, that.courseId) && Objects.equals(lessonId, that.lessonId) && status == that.status && Objects.equals(studentId, that.studentId) && Objects.equals(teacherId, that.teacherId) && Objects.equals(email, that.email) && registerType == that.registerType && Objects.equals(totalAmountFrom, that.totalAmountFrom) && Objects.equals(totalAmountTo, that.totalAmountTo) && Objects.equals(createdDate, that.createdDate) && Objects.equals(statuses, that.statuses);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), courseId, lessonId, status, studentId, teacherId, email, registerType, totalAmountFrom, totalAmountTo, createdDate, statuses);
+    }
 
     @Override
     public Specification<RegisterCourseEntity> specification() {

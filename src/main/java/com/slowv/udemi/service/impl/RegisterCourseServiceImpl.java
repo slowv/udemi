@@ -16,6 +16,7 @@ import com.slowv.udemi.service.dto.request.RegisterCourseFilterRequest;
 import com.slowv.udemi.service.mapper.LessonMapper;
 import com.slowv.udemi.service.mapper.RegisterCourseMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,7 @@ public class RegisterCourseServiceImpl implements RegisterCourseService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "courses", key = "#request.toString()")
     public Page<RegisterCourseRecord> courses(final RegisterCourseFilterRequest request) {
         return registerCourseRepository.findAll(request.specification(), request.getPaging().pageable())
                 .map(registerCourseMapper::toDto);

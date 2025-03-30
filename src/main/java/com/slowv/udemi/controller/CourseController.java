@@ -1,7 +1,6 @@
 package com.slowv.udemi.controller;
 
 
-import com.slowv.udemi.service.dto.LessonProcessRecord;
 import com.slowv.udemi.service.dto.RegisterCourseRecord;
 import com.slowv.udemi.service.dto.request.AddLessonRequest;
 import com.slowv.udemi.service.dto.request.AssignRegisterCourseRequest;
@@ -12,7 +11,6 @@ import com.slowv.udemi.service.dto.response.PagingResponse;
 import com.slowv.udemi.service.dto.response.Response;
 import jakarta.validation.Valid;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;

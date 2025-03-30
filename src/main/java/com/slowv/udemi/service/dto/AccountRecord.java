@@ -2,6 +2,7 @@ package com.slowv.udemi.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.io.Serializable;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -11,5 +12,5 @@ public record AccountRecord(
         TokenRecord refreshToken,
         AccountInfoRecord accountInfo,
         List<String> roleNames
-) {
+) implements Serializable {
 }
