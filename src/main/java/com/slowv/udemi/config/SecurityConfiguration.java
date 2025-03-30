@@ -1,7 +1,14 @@
 package com.slowv.udemi.config;
 
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 import com.slowv.udemi.config.filter.JwtAccessTokenFilter;
 import com.slowv.udemi.config.filter.JwtRefreshTokenFilter;
+import com.slowv.udemi.config.properties.SecurityProperties;
 import com.slowv.udemi.security.SecurityProblemSupport;
 import com.slowv.udemi.security.jwt.TokenProvider;
 import com.slowv.udemi.service.AuthenticationService;
@@ -16,6 +23,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -26,6 +37,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Collections;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -59,7 +72,9 @@ public class SecurityConfiguration {
                         ex.accessDeniedHandler(problemSupport)
                                 .authenticationEntryPoint(problemSupport)
                 )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .httpBasic(withDefaults())
                 .build();
     }
 
@@ -70,6 +85,7 @@ public class SecurityConfiguration {
                         new AntPathRequestMatcher("/refresh-token", RequestMethod.POST.name())
                 )
                 .csrf(AbstractHttpConfigurer::disable)
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtRefreshTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
@@ -89,6 +105,7 @@ public class SecurityConfiguration {
         return httpSecurity
                 .securityMatcher(new AntPathRequestMatcher("/logout/**"))
                 .csrf(AbstractHttpConfigurer::disable)
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAccessTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
@@ -117,6 +134,21 @@ public class SecurityConfiguration {
         return source;
     }
 
+    @Bean
+    JwtDecoder jwtDecoder(SecurityProperties securityProperties) {
+        return NimbusJwtDecoder
+                .withPublicKey(securityProperties.getRsa().getPublicKey())
+                .build();
+    }
+
+    @Bean
+    JwtEncoder jwtEncoder(SecurityProperties securityProperties) {
+        JWK jwk = new RSAKey.Builder(securityProperties.getRsa().getPublicKey())
+                .privateKey(securityProperties.getRsa().getPrivateKey())
+                .build();
+        final JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
+        return new NimbusJwtEncoder(jwkSource);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

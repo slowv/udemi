@@ -50,6 +50,7 @@ public class DomainUserDetailsService implements UserDetailsService {
                 .stream()
                 .map(RoleEntity::getName)
                 .map(Enum::name)
+                .map("ROLE_"::concat)
                 .map(SimpleGrantedAuthority::new)
                 .toList();
 

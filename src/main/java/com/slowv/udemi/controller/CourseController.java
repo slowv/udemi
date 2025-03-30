@@ -12,6 +12,7 @@ import com.slowv.udemi.service.dto.response.PagingResponse;
 import com.slowv.udemi.service.dto.response.Response;
 import jakarta.validation.Valid;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -53,7 +54,8 @@ public interface CourseController {
      * @param request {@link RegisterCourseFilterRequest}
      * @return Page {@link RegisterCourseRecord}
      */
-    @Secured({"TEACHER", "STUDENT", "GUEST", "ADMIN"})
+//    @Secured({"TEACHER", "STUDENT", "GUEST", "ADMIN"})
+//    @PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_STUDENT', 'ROLE_GUEST', 'ROLE_ADMIN')")
     @PostMapping
     Response<PagingResponse<RegisterCourseRecord>> getRegisterCourse(final @RequestBody @Valid RegisterCourseFilterRequest request);
 

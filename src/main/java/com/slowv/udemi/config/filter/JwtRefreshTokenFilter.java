@@ -27,8 +27,8 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
 
         final var refreshToken = request.getHeader(KEY_HEADER_X_REFRESH_TOKEN);
 
-        if (StringUtils.hasText(refreshToken) && tokenProvider.validateToken(refreshToken)) {
-            final var authentication = tokenProvider.getAuthentication(refreshToken);
+        if (StringUtils.hasText(refreshToken) && tokenProvider.validateTokenRsa(refreshToken)) {
+            final var authentication = tokenProvider.getAuthenticationRSA(refreshToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             request.getSession().setAttribute(KEY_SESSION_EMAIL_AUTH, SecurityUtils.getCurrentUserLogin().orElse("SYSTEM"));
         } else {
