@@ -1,16 +1,20 @@
 package com.slowv.udemi.service.dto.request;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.slowv.udemi.entity.RegisterCourseEntity;
 import com.slowv.udemi.entity.enums.RegisterLessonStatus;
 import com.slowv.udemi.entity.enums.RegisterType;
 import com.slowv.udemi.repository.specification.RegisterCourseSpecification;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -58,6 +62,12 @@ public class RegisterCourseFilterRequest extends FilterRequest<RegisterCourseEnt
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), courseId, lessonId, status, studentId, teacherId, email, registerType, totalAmountFrom, totalAmountTo, createdDate, statuses);
+    }
+
+    @NonNull
+    @SneakyThrows
+    public String getKeyCache(ObjectMapper objectMapper) {
+        return DigestUtils.md5Hex(objectMapper.writeValueAsString(this));
     }
 
     @Override

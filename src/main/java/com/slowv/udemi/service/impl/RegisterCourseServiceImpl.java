@@ -1,6 +1,7 @@
 package com.slowv.udemi.service.impl;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.slowv.udemi.controller.errors.BusinessException;
 import com.slowv.udemi.entity.LessonProcessEntity;
 import com.slowv.udemi.entity.enums.RegisterLessonStatus;
@@ -16,17 +17,22 @@ import com.slowv.udemi.service.dto.request.RegisterCourseFilterRequest;
 import com.slowv.udemi.service.mapper.LessonMapper;
 import com.slowv.udemi.service.mapper.RegisterCourseMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class RegisterCourseServiceImpl implements RegisterCourseService {
@@ -34,6 +40,9 @@ public class RegisterCourseServiceImpl implements RegisterCourseService {
     // Mapper
     private final LessonMapper lessonMapper;
     private final RegisterCourseMapper registerCourseMapper;
+
+    private final ObjectMapper objectMapper;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     // Repository
     private final RegisterCourseRepository registerCourseRepository;
@@ -54,15 +63,26 @@ public class RegisterCourseServiceImpl implements RegisterCourseService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "courses", key = "#request.toString()")
+    @Cacheable(value = "courses", key = "#request.getKeyCache(@objectMapper)")
     public Page<RegisterCourseRecord> courses(final RegisterCourseFilterRequest request) {
         return registerCourseRepository.findAll(request.specification(), request.getPaging().pageable())
                 .map(registerCourseMapper::toDto);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    @SneakyThrows
     public List<Long> getIds(final RegisterCourseFilterRequest request) {
-        return registerCourseRepository.getIds(request.specification());
+        final var keyCache = request.getKeyCache(objectMapper);
+
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(keyCache))) {
+            return (List<Long>) redisTemplate.opsForValue().get(keyCache);
+        }
+
+        final var ids = registerCourseRepository.getIds(request.specification());
+        redisTemplate.opsForValue().set(keyCache, ids);
+
+        return ids;
     }
 
     @Override

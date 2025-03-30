@@ -1,5 +1,6 @@
 package com.slowv.udemi;
 
+import com.slowv.udemi.config.properties.CacheProperties;
 import com.slowv.udemi.config.properties.MinioProperties;
 import com.slowv.udemi.config.properties.SecurityProperties;
 import io.micrometer.common.util.StringUtils;
@@ -15,7 +16,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @SpringBootApplication
-@EnableConfigurationProperties({MinioProperties.class, SecurityProperties.class})
+@EnableConfigurationProperties({MinioProperties.class, SecurityProperties.class, CacheProperties.class})
 public class UdemiApplication {
 
     private static final Logger log = LoggerFactory.getLogger(UdemiApplication.class);
