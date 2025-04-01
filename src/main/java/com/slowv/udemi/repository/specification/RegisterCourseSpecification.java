@@ -22,7 +22,7 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RegisterCourseSpecification {
 
-    public static final String FIELD_EMAIL = "email";
+    public static final String FIELD_EMAIL = "templates/email";
     public static final String FIELD_REGISTER_TYPE = "registerType";
     public static final String FIELD_TOTAL_AMOUNT = "totalAmount";
     public static final String FIELD_TOTAL_PAID_AMOUNT = "totalPaidAmount";

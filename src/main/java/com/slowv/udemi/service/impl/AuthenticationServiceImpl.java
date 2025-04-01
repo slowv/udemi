@@ -1,11 +1,12 @@
 package com.slowv.udemi.service.impl;
 
+import com.slowv.udemi.common.utils.StringUtils;
 import com.slowv.udemi.controller.errors.BusinessException;
-import com.slowv.udemi.entity.AccountEntity;
 import com.slowv.udemi.entity.AccountInfoEntity;
 import com.slowv.udemi.entity.RoleEntity;
 import com.slowv.udemi.entity.enums.ERole;
 import com.slowv.udemi.entity.enums.TokenType;
+import com.slowv.udemi.integration.mail.MailService;
 import com.slowv.udemi.integration.storage.MinioService;
 import com.slowv.udemi.integration.storage.model.UploadFileAgrs;
 import com.slowv.udemi.repository.AccountRepository;
@@ -22,6 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -39,6 +41,7 @@ import java.util.Objects;
 import static com.slowv.udemi.common.constant.AppConstants.KEY_SESSION_EMAIL_AUTH;
 import static com.slowv.udemi.security.jwt.TokenProvider.AUTHORITIES_KEY;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -48,6 +51,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RoleRepository roleRepository;
 
     private final MinioService minioService;
+    private final MailService mailService;
 
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -107,18 +111,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         accountInfo.setPhone(request.phone());
         accountInfo.setIntroduce(request.introduce());
 
+        log.info("start giờ");
         final var avatarUrl = minioService.upload(
                 UploadFileAgrs.builder()
                         .path("users/avatar")
                         .file(request.avatar())
                         .build()
         );
+        log.info("end giờ");
 
         accountInfo.setAvatarUrl(avatarUrl);
-
         account.setAccountInfo(accountInfo);
 
-        return accountMapper.toDto(accountRepository.save(account));
+        log.info("start giờ");
+        mailService.sendEmailActiveAccount(
+                account.getEmail(),
+                "Đăng ký tài khoản thành công!",
+                account,
+                StringUtils.generateRandomString(6)
+        );
+        log.info("end giờ");
+
+        log.info("start giờ");
+        accountRepository.save(account);
+        log.info("end giờ");
+
+        return accountMapper.toDto(account);
     }
 
     @Override

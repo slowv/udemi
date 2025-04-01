@@ -29,7 +29,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "accounts", indexes = {
-        @Index(columnList = "email", unique = true)
+        @Index(columnList = "templates/email", unique = true)
 })
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountEntity extends AbstractAuditingEntity<Long> {

@@ -49,6 +49,19 @@ spring:
       hibernate.query.fail_on_pagination_over_collection_fetch: true
       hibernate.query.in_clause_parameter_padding: true
 
+  mail:
+    username: quocviet.hn98@gmail.com
+    password: "xdoh vuwj eawd lizr"
+    host: smtp.gmail.com
+    port: 587
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 integration:
   minio:
     access-key: admin
