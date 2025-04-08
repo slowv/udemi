@@ -1,12 +1,11 @@
 package com.slowv.udemi.integration.mail.impl;
 
-import com.slowv.udemi.controller.errors.BusinessException;
+import com.slowv.udemi.web.rest.errors.BusinessException;
 import com.slowv.udemi.entity.AccountEntity;
 import com.slowv.udemi.integration.mail.MailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;

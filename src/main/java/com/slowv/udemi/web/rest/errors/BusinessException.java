@@ -1,4 +1,4 @@
-package com.slowv.udemi.controller.errors;
+package com.slowv.udemi.web.rest.errors;
 
 import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;

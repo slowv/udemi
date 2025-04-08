@@ -1,7 +1,7 @@
 package com.slowv.udemi.integration.storage;
 
 import com.slowv.udemi.common.utils.ConverterUtils;
-import com.slowv.udemi.controller.errors.BusinessException;
+import com.slowv.udemi.web.rest.errors.BusinessException;
 import com.slowv.udemi.integration.storage.model.UploadFileAgrs;
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;

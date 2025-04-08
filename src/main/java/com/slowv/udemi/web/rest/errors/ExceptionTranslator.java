@@ -1,4 +1,4 @@
-package com.slowv.udemi.controller.errors;
+package com.slowv.udemi.web.rest.errors;
 
 import com.slowv.udemi.service.dto.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;

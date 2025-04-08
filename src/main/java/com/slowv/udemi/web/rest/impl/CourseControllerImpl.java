@@ -1,6 +1,6 @@
-package com.slowv.udemi.controller.impl;
+package com.slowv.udemi.web.rest.impl;
 
-import com.slowv.udemi.controller.CourseController;
+import com.slowv.udemi.web.rest.CourseController;
 import com.slowv.udemi.entity.AccountEntity;
 import com.slowv.udemi.integration.mail.MailService;
 import com.slowv.udemi.service.RegisterCourseService;

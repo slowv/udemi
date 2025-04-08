@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Web socket</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            padding: 0;
+            margin: 0;
+        }
+
+        #main, #setting {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            align-items: center;
+            margin-top: 100px;
+            gap: 30px;
+        }
+
+        .box-msg {
+            border: 1px solid #f1f1f1;
+            border-radius: 3px;
+            width: 500px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #787878;
+        }
+
+        .box-msg .message {
+            position: relative;
+            display: flex;
+            justify-content: start;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .box-msg .message.revert {
+            justify-content: end;
+            flex-direction: row-reverse;
+        }
+
+        .box-msg .message .user {
+            width: 40px;
+            height: 40px;
+            overflow: hidden;
+            border-radius: 50%;
+            background: aquamarine;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .box-msg .message .msg {
+            background: #f1f1f1;
+            border-radius: 50px;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            height: 35px;
+            padding: 0 30px;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div id="setting">
+    <input type="text" id="name" placeholder="Tên...">
+    <button id="connect">Connect</button>
+</div>
+
+<div id="main" class="d-none">
+    <div class="box-msg">
+<!--        <div class="message">-->
+<!--            <div class="user">Việt</div>-->
+<!--            <div class="msg">Hello em</div>-->
+<!--        </div>-->
+<!--        <div class="message revert">-->
+<!--            <div class="user">Quí</div>-->
+<!--            <div class="msg">Dạ hello anh!</div>-->
+<!--        </div>-->
+    </div>
+
+    <div class="box-chat">
+        <input type="text" id="input-msg" placeholder="Nói gì đê...">
+        <button id="sendMsg">Send</button>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    const BASE_URL = 'http://localhost:8080/ws';
+    const CHANNEL_CHAT = '/chat'
+    const id = 1; // id hội thoại
+    let isConnected = false;
+    let username = '';
+
+    const boxMsg = $('.box-msg');
+
+    $(document).ready(options => {
+        const connect = (url) => {
+            const sockJS = new SockJS(url);
+            return Stomp.over(sockJS, {protocol: ['v12.stomp']})
+        }
+
+        $('#connect').click(() => {
+            username = $('#name').val();
+
+            if (!username) {
+                alert('Vui lòng điền tên!');
+                return;
+            }
+
+            const stompClient = connect(BASE_URL);
+
+            stompClient.connect(
+                {},
+                frame => {
+                    console.log("FRAME: ", frame);
+                    connectSuccess();
+
+                    stompClient.subscribe(`${CHANNEL_CHAT}/${id}/receive`, res => {
+                        console.log("RESPONSE: ", res);
+
+                        const {user, msg} = JSON.parse(res.body);
+                        boxMsg.append(
+                            `
+                            <div class="message ${user === username ? '' : 'revert'}">
+                                <div class="user">${user}</div>
+                                <div class="msg">${msg}</div>
+                            </div>
+                        `
+                        )
+                    })
+                },
+                err => {
+                    console.error(err);
+                }
+            );
+
+            $('#sendMsg').click(() => {
+                if (isConnected) {
+                    const textChat = $('#input-msg').val();
+                    stompClient.send(`${CHANNEL_CHAT}/${id}`, {}, createMsgPayload(username, textChat));
+                    textChat.val('');
+                } else {
+                    alert("Chưa kết nối websocket!")
+                }
+            });
+        })
+
+        const createMsgPayload = (user, msg) => {
+            return JSON.stringify({user, msg});
+        }
+
+        const connectSuccess = () => {
+            isConnected = true;
+
+            $('#main').removeClass('d-none');
+            $('#setting').addClass('d-none');
+        }
+    })
+</script>
+</body>
+</html>

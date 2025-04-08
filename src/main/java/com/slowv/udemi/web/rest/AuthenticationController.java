@@ -1,4 +1,4 @@
-package com.slowv.udemi.controller;
+package com.slowv.udemi.web.rest;
 
 import com.slowv.udemi.service.dto.AccountRecord;
 import com.slowv.udemi.service.dto.TokenRecord;

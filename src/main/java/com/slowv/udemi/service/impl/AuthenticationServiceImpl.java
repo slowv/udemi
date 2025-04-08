@@ -1,7 +1,7 @@
 package com.slowv.udemi.service.impl;
 
 import com.slowv.udemi.common.utils.StringUtils;
-import com.slowv.udemi.controller.errors.BusinessException;
+import com.slowv.udemi.web.rest.errors.BusinessException;
 import com.slowv.udemi.entity.AccountInfoEntity;
 import com.slowv.udemi.entity.RoleEntity;
 import com.slowv.udemi.entity.enums.ERole;

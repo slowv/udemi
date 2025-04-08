@@ -1,6 +1,6 @@
-package com.slowv.udemi.controller.impl;
+package com.slowv.udemi.web.rest.impl;
 
-import com.slowv.udemi.controller.AuthenticationController;
+import com.slowv.udemi.web.rest.AuthenticationController;
 import com.slowv.udemi.service.AuthenticationService;
 import com.slowv.udemi.service.dto.AccountRecord;
 import com.slowv.udemi.service.dto.TokenRecord;

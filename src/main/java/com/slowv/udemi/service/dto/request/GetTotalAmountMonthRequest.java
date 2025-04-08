@@ -1,7 +1,7 @@
 package com.slowv.udemi.service.dto.request;
 
 import com.slowv.udemi.common.utils.DateUtils;
-import com.slowv.udemi.controller.errors.BusinessException;
+import com.slowv.udemi.web.rest.errors.BusinessException;
 import com.slowv.udemi.entity.RegisterCourseEntity;
 import com.slowv.udemi.repository.specification.RegisterCourseSpecification;
 import com.slowv.udemi.service.dto.request.enums.DateFixed;

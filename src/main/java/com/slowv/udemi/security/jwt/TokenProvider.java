@@ -1,16 +1,14 @@
 package com.slowv.udemi.security.jwt;
 
-import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import com.slowv.udemi.config.properties.SecurityProperties;
-import com.slowv.udemi.controller.errors.BusinessException;
+import com.slowv.udemi.web.rest.errors.BusinessException;
 import com.slowv.udemi.entity.AccountEntity;
 import com.slowv.udemi.entity.RoleEntity;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

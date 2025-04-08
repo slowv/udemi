@@ -2,7 +2,7 @@ package com.slowv.udemi.service.impl;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.slowv.udemi.controller.errors.BusinessException;
+import com.slowv.udemi.web.rest.errors.BusinessException;
 import com.slowv.udemi.entity.LessonProcessEntity;
 import com.slowv.udemi.entity.enums.RegisterLessonStatus;
 import com.slowv.udemi.repository.AccountRepository;
@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
