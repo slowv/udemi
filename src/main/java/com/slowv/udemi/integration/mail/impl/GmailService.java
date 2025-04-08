@@ -6,7 +6,9 @@ import com.slowv.udemi.integration.mail.MailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -21,6 +23,7 @@ public class GmailService implements MailService {
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    private final MessageSource messageSource;
 
     @Value("${spring.mail.username}")
     private String from;

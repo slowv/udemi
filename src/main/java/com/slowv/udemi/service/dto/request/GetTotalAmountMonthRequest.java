@@ -27,7 +27,7 @@ public class GetTotalAmountMonthRequest extends FilterRequest<RegisterCourseEnti
 //    @Size(min = 2, max = 2)
     List<LocalDate> range = new ArrayList<>();
 
-    @NotNull
+    @NotNull(message = "{searchType.must-not-be-null}")
     SearchType searchType;
 
     DateFixed dateFixed;

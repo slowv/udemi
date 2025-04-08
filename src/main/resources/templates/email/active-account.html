@@ -8,8 +8,8 @@
     <title>Active account</title>
 </head>
 <body>
-<h1>Đăng ký tài khoản</h1>
-<p>Tài khoản: <span th:text="${account.email}"></span></p>
-<p>Mã kích hoạt: <span th:text="${code}"></span></p>
+<h1 th:text="#{label.active-account}">Đăng ký tài khoản</h1>
+<p th:text="#{label.email}">Tài khoản: <span th:text="${account.email}"></span></p>
+<p th:text="#{label.code-active}">Mã kích hoạt: <span th:text="${code}"></span></p>
 </body>
 </html>
