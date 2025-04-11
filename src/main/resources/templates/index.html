@@ -26,6 +26,7 @@
             align-items: center;
             margin-top: 100px;
             gap: 30px;
+            overflow: hidden;
         }
 
         .box-msg {
@@ -83,11 +84,26 @@
             display: flex;
         }
 
+        .notification {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            background: bisque;
+            border-radius: 3px;
+            padding: 10px 40px;
+            transition: .3s;
+            transform: translateX(150%);
+        }
 
+        .notification.active {
+            transform: translateX(0%);
+        }
     </style>
 </head>
 <body>
-
+<div class="notification">
+    message 1123456
+</div>
 <div id="setting">
     <input type="text" id="name" placeholder="Tên...">
     <button id="connect">Connect</button>
@@ -95,14 +111,14 @@
 
 <div id="main" class="d-none">
     <div class="box-msg">
-<!--        <div class="message">-->
-<!--            <div class="user">Việt</div>-->
-<!--            <div class="msg">Hello em</div>-->
-<!--        </div>-->
-<!--        <div class="message revert">-->
-<!--            <div class="user">Quí</div>-->
-<!--            <div class="msg">Dạ hello anh!</div>-->
-<!--        </div>-->
+        <!--        <div class="message">-->
+        <!--            <div class="user">Việt</div>-->
+        <!--            <div class="msg">Hello em</div>-->
+        <!--        </div>-->
+        <!--        <div class="message revert">-->
+        <!--            <div class="user">Quí</div>-->
+        <!--            <div class="msg">Dạ hello anh!</div>-->
+        <!--        </div>-->
     </div>
 
     <div class="box-chat">
@@ -120,6 +136,7 @@
     const id = 1; // id hội thoại
     let isConnected = false;
     let username = '';
+    const token = 'eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1ZGVtaUlzc3VlciIsInN1YiI6InRlYWNoZXJAZ21haWwuY29tIiwiZXhwIjoxNzQ0Mzg2OTgwLCJhdXRoIjoiUk9MRV9URUFDSEVSIiwiaWF0IjoxNzQ0Mzg2MDgwfQ.ueCqFVGyc5sicOaAS3-CocYLOSCDsXH6kxSB5PtpYBEB4aeNWYrhnJ9aTUJd-u1iNXCbhdmeUW1OlHbn9ok-Vg_jgp_oqJOHT3oeW80DX89R8aTRq6LwpbLyjKvPjP4rlQlS7tw4g8f207p6IN1jJlGxTO4EnlIJdB9lNGcKnzqFgdIdI11SO2iBuyrgMUvq1l4e4pzBeJSeR-pbomsMcgOUysf8sasfJsZJdqTRntoRzMEa2NhBNaZZSSIZjrNsvep8NfNf3zT6ODtQ3nxyXHH_tMvzhIvTBsibCnqCtGpxPVFjJple19VrgRNPTzRCtmC4PMvW4JZGicZ1bmV1_A'
 
     const boxMsg = $('.box-msg');
 
@@ -140,7 +157,9 @@
             const stompClient = connect(BASE_URL);
 
             stompClient.connect(
-                {},
+                {
+                    Authorization: `Bearer ${token}`
+                },
                 frame => {
                     console.log("FRAME: ", frame);
                     connectSuccess();
@@ -157,23 +176,43 @@
                             </div>
                         `
                         )
+                    });
+
+                    stompClient.subscribe(`/notifications`, res => {
+                        showNotification(res.body);
                     })
+
+                    // Lắng nghe lỗi khi SUBSCRIBE bị từ chối
+                    stompClient.onStompError = frame => {
+                        console.error('Broker error: ', frame.headers['message']);
+                        console.error('Details: ', frame.body);
+                    };
                 },
                 err => {
-                    console.error(err);
+                    showNotification(err);
                 }
             );
 
             $('#sendMsg').click(() => {
                 if (isConnected) {
                     const textChat = $('#input-msg').val();
-                    stompClient.send(`${CHANNEL_CHAT}/${id}`, {}, createMsgPayload(username, textChat));
+                    stompClient.send(`${CHANNEL_CHAT}/${id}`, {X_DEVICE: 'IPhone 12'}, createMsgPayload(username, textChat));
                     textChat.val('');
                 } else {
                     alert("Chưa kết nối websocket!")
                 }
             });
         })
+
+        const showNotification = msg => {
+            const $notification = $(".notification");
+            $notification.html(msg);
+            $notification.addClass('active');
+
+            setTimeout(() => {
+                $notification.removeClass('active');
+            }, 2 * 1000)
+        }
 
         const createMsgPayload = (user, msg) => {
             return JSON.stringify({user, msg});
