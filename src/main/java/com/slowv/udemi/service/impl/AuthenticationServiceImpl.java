@@ -1,7 +1,6 @@
 package com.slowv.udemi.service.impl;
 
 import com.slowv.udemi.common.utils.StringUtils;
-import com.slowv.udemi.web.rest.errors.BusinessException;
 import com.slowv.udemi.entity.AccountInfoEntity;
 import com.slowv.udemi.entity.RoleEntity;
 import com.slowv.udemi.entity.enums.ERole;
@@ -18,6 +17,7 @@ import com.slowv.udemi.service.dto.TokenRecord;
 import com.slowv.udemi.service.dto.request.SignInRequest;
 import com.slowv.udemi.service.dto.request.SignUpRequest;
 import com.slowv.udemi.service.mapper.AccountMapper;
+import com.slowv.udemi.web.rest.errors.BusinessException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -95,7 +95,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AccountRecord signUp(final SignUpRequest request) {
 
-        if(accountRepository.existsByEmail(request.email())) {
+        if (accountRepository.existsByEmail(request.email())) {
             throw new BusinessException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Email is already in used");
         }
 
@@ -115,7 +115,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final var avatarUrl = minioService.upload(
                 UploadFileAgrs.builder()
                         .path("users/avatar")
-                        .file(request.avatar())
+                        .multipartFile(request.avatar())
                         .build()
         );
         log.info("end giờ");

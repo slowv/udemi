@@ -1,8 +1,8 @@
 package com.slowv.udemi.integration.storage;
 
 import com.slowv.udemi.common.utils.ConverterUtils;
-import com.slowv.udemi.web.rest.errors.BusinessException;
 import com.slowv.udemi.integration.storage.model.UploadFileAgrs;
+import com.slowv.udemi.web.rest.errors.BusinessException;
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
 import io.minio.GetPresignedObjectUrlArgs;
@@ -81,9 +81,8 @@ public final class MinioService implements S3Service {
     @SneakyThrows
     @Override
     public String upload(final UploadFileAgrs request) {
-        final var file = request.getFile();
-        final var filename = file.getOriginalFilename();
-        log.info("Bucket: {} - file name: {} - file size: {}", BUCKET, filename, file.getSize());
+        final var filename = request.getFilename();
+        log.info("Bucket: {} - file name: {} - file size: {}", BUCKET, filename, request.getSize());
 
         final var pathFile = String.join("/", request.getPath(), filename);
         try {
@@ -91,8 +90,8 @@ public final class MinioService implements S3Service {
                     PutObjectArgs.builder()
                             .bucket(BUCKET)
                             .object(pathFile)
-                            .contentType(Optional.ofNullable(file.getContentType()).orElse("image/png; image/jpg;"))
-                            .stream(file.getInputStream(), file.getSize(), -1)
+                            .contentType(Optional.ofNullable(request.getContentType()).orElse("image/png; image/jpg;"))
+                            .stream(request.getInputStream(), request.getSize(), -1)
                             .build()
             );
             log.info("Response: {}", response);

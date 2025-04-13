@@ -12,7 +12,7 @@ import java.util.concurrent.Executor;
 @EnableScheduling
 @Configuration
 @EnableAsync
-public class AsyncConfiguration  implements AsyncConfigurer {
+public class AsyncConfiguration implements AsyncConfigurer {
 
     @Bean(name = "taskExecutor")
     public Executor taskExecutor() {
@@ -22,6 +22,7 @@ public class AsyncConfiguration  implements AsyncConfigurer {
         executor.setQueueCapacity(100);
         executor.setThreadNamePrefix("async-exec-");
         executor.initialize();
+        executor.setWaitForTasksToCompleteOnShutdown(true);
         return executor;
     }
 }
