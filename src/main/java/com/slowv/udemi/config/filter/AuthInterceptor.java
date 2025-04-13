@@ -1,7 +1,6 @@
 package com.slowv.udemi.config.filter;
 
 import com.slowv.udemi.security.jwt.TokenProvider;
-import com.slowv.udemi.web.rest.errors.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -45,4 +44,5 @@ public class AuthInterceptor implements ChannelInterceptor {
 
         return message;
     }
+
 }

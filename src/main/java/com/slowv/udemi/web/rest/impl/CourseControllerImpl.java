@@ -81,4 +81,12 @@ public class CourseControllerImpl implements CourseController {
         mailService.sendEmailActiveAccount("trinhhoangnam602@gmail.com", "Active account!", account, "123456");
         return Response.ok(messageSource.getMessage("hello", null, new Locale(language)));
     }
+
+    @Override
+    public Response<String> testAsync() {
+        registerCourseService.testAsync();
+        return Response.ok("Test Async!!!!");
+    }
+
+
 }

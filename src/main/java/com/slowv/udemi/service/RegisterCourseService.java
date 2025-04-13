@@ -29,4 +29,6 @@ public interface RegisterCourseService {
     void assign(AssignRegisterCourseRequest request, Long id);
 
     RegisterCourseRecord addLesson(List<AddLessonRequest> request, Long id);
+
+    void testAsync();
 }

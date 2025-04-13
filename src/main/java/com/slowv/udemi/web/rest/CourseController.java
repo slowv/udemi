@@ -11,6 +11,7 @@ import com.slowv.udemi.service.dto.response.PagingResponse;
 import com.slowv.udemi.service.dto.response.Response;
 import jakarta.validation.Valid;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -85,4 +86,6 @@ public interface CourseController {
             @RequestBody @Valid GetTotalAmountMonthRequest request
     );
 
+    @GetMapping("/test-async")
+    Response<String> testAsync();
 }

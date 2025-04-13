@@ -23,6 +23,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.NonNull;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -131,5 +132,13 @@ public class RegisterCourseServiceImpl implements RegisterCourseService {
 
         registerCourse.setLessonProcesses(lessonProcesses);
         return registerCourseMapper.toDto(registerCourse);
+    }
+
+    @SneakyThrows
+    @Async("taskExecutor")
+    @Override
+    public void testAsync() {
+        Thread.sleep(5 * 1000);
+        log.info("TEST Async!!!!");
     }
 }
