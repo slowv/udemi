@@ -67,7 +67,6 @@ public class UploadServiceImpl implements UploadService {
 //        final var front = uploadFile(request.getFront());
 //        final var back = uploadFile(request.getBack());
 //        final var selfie = uploadFile(request.getSelfie());
-//
 //        return new UploadDocumentResponse(front, back, selfie);
     }
 
