@@ -1,5 +1,6 @@
 package com.slowv.udemi.web.rest;
 
+import com.slowv.udemi.channel.ResourceServiceChannel;
 import com.slowv.udemi.service.dto.PostDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -23,6 +24,7 @@ import java.util.List;
 public class TestRestTemplateController {
 
     private final RestTemplate restTemplate;
+    private final ResourceServiceChannel resourceServiceChannel;
 
     @SuppressWarnings("unchecked")
     @GetMapping
@@ -54,7 +56,7 @@ public class TestRestTemplateController {
         final var headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         final var httpEntity = new HttpEntity<>(postDto, headers);
-        
+
         final var responseEntity = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, PostDto.class);
         return responseEntity.getBody();
     }
@@ -64,6 +66,11 @@ public class TestRestTemplateController {
         final var url = "https://jsonplaceholder.typicode.com/posts/1";
         restTemplate.exchange(url, HttpMethod.DELETE, new HttpEntity<>(null), Void.class);
         return "Delete successfully!!!";
+    }
+
+    @GetMapping("/get-resource")
+    public String getResource() {
+        return resourceServiceChannel.getResource();
     }
 }
 

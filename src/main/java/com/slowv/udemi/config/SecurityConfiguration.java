@@ -64,7 +64,12 @@ public class SecurityConfiguration {
     @Order(2)
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http, TokenProvider tokenProvider, SecurityProblemSupport problemSupport) throws Exception {
         return http
-                .securityMatcher("/api/**")
+                .securityMatcher(
+                        new OrRequestMatcher(
+                                new AntPathRequestMatcher("/api/**", RequestMethod.POST.name()),
+                                new AntPathRequestMatcher("/test-rest-template/get-resource", RequestMethod.GET.name())
+                        )
+                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAccessTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)

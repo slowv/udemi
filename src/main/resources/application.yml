@@ -94,5 +94,11 @@ cache:
     # server: redis://localhost:6379,redis://localhost:16379,redis://localhost:26379
     # cluster: true
 
+channel:
+  resource-service:
+    url: http://localhost:8081/resource-service/api
+    api:
+      resource: ${channel.resource-service.url}/resources
+
 server:
   port: 8080

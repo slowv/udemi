@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class ExceptionTranslator {
         return ErrorResponse.badRequest(e.getErrors());
     }
 
-//    @Override
+    //    @Override
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -49,6 +50,18 @@ public class ExceptionTranslator {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ErrorResponse<?> handleUsernameNotFoundException(UsernameNotFoundException e) {
         return ErrorResponse.badRequest(e.getMessage());
+    }
+
+    @ExceptionHandler(RestTemplateException.class)
+    public ResponseEntity<ErrorResponse<?>> handleRestTemplateException(RestTemplateException e) {
+        return ResponseEntity.internalServerError()
+                .body(ErrorResponse.internalServer(e.getDetail()));
+    }
+
+    @ExceptionHandler(SocketTimeoutException.class)
+    public ResponseEntity<ErrorResponse<?>> handleSocketTimeoutException(SocketTimeoutException e) {
+        return ResponseEntity.internalServerError()
+                .body(ErrorResponse.internalServer("Call Third party service timeout, please try again later!!!"));
     }
 
 //    @ExceptionHandler(Exception.class)
