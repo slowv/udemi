@@ -47,8 +47,33 @@ spring:
       hibernate.order_inserts: true
       hibernate.order_updates: true
       hibernate.query.fail_on_pagination_over_collection_fetch: true
-      hibernate.query.in_clause_parameter_padding: true
+      hibernate.query.in_clause_parameter_padding: true\
 
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: MyQuartzScheduler
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            useProperties: true
+            isClustered: false
+            tablePrefix: QRTZ_
+            dataSource: udemi
+          dataSource:
+            udemi:
+              driver: org.postgresql.Driver
+              URL: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_DATABASE:udemi}
+              user: ${POSTGRESQL_USER:udemi}
+              password: ${POSTGRESQL_PASS:123456}
+          threadPool:
+            threadCount: 5
+  
   mail:
     username: quocviet.hn98@gmail.com
     password: "xdoh vuwj eawd lizr"

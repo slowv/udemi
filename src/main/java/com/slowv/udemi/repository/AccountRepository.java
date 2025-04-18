@@ -5,14 +5,17 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
-  String ACCOUNT_BY_EMAIL_CACHE = "accountByEmail";
+    String ACCOUNT_BY_EMAIL_CACHE = "accountByEmail";
 
-  @Cacheable(ACCOUNT_BY_EMAIL_CACHE)
-  Optional<AccountEntity> findByEmail(String email);
+    @Cacheable(ACCOUNT_BY_EMAIL_CACHE)
+    Optional<AccountEntity> findByEmail(String email);
 
-  boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
+
+    List<AccountEntity> findAllByEmailIn(List<String> emails);
 }

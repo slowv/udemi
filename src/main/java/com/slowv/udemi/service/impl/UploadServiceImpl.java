@@ -99,4 +99,15 @@ public class UploadServiceImpl implements UploadService {
                 .build();
         return s3Service.upload(uploadFileAgrs);
     }
+//
+//    public static void main(String[] args) {
+//        final var scheduledExecutorService = Executors.newScheduledThreadPool(5);
+//        scheduledExecutorService
+//                .scheduleAtFixedRate(
+//                        () -> System.out.println("Chạy scheduler"),
+//                        0,
+//                        5 * 1000,
+//                        TimeUnit.MILLISECONDS
+//                );
+//    }
 }

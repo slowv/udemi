@@ -3,7 +3,6 @@ package com.slowv.udemi.scheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -13,9 +12,9 @@ public class NotificationScheduler {
 
     private final SimpMessageSendingOperations messagingTemplate;
 
-    @Scheduled(fixedRate = 5000)
-    public void execute() {
-//        log.info("Running NotificationScheduler...");
+//    @Scheduled(cron = "0 * * * * *")
+//    public void execute() {
+//        log.info("Running NotificationScheduler... {}", "8H ngày mai yêu cầu mọi người đóng tiền điện.");
 //        messagingTemplate.convertAndSend("/notifications", "8H ngày mai yêu cầu mọi người đóng tiền điện.");
-    }
+//    }
 }
