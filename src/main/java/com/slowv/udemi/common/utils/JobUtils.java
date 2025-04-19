@@ -1,6 +1,7 @@
 package com.slowv.udemi.common.utils;
 
 import com.slowv.udemi.entity.annotation.JobName;
+import com.slowv.udemi.service.dto.request.JobConfigRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -42,6 +43,11 @@ public class JobUtils {
         return scheduler.getJobDetail(JobKey.jobKey(jobName, group));
     }
 
+    @SneakyThrows
+    public JobDetail getJobDetail(String key, Scheduler scheduler) {
+        return scheduler.getJobDetail(JobKey.jobKey(key));
+    }
+
     public Trigger createTriggerWithTriggerIntervalSeconds(
             final JobDetail jobDetail,
             final @NotBlank String triggerName,
@@ -63,5 +69,9 @@ public class JobUtils {
 
     private String getJobName(Class<? extends Job> clazz) {
         return clazz.isAnnotationPresent(JobName.class) ? clazz.getAnnotation(JobName.class).value() : clazz.getSimpleName();
+    }
+
+    public JobKey getJobKey(JobConfigRequest request) {
+        return JobKey.jobKey(request.getJobName(), request.getJobGroup());
     }
 }

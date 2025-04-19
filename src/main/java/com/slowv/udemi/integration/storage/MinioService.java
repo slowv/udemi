@@ -81,7 +81,8 @@ public final class MinioService implements S3Service {
     @SneakyThrows
     @Override
     public String upload(final UploadFileAgrs request) {
-        final var filename = request.getFilename();
+        final var file = request.getMultipartFile();
+        final var filename = file.getOriginalFilename();
         log.info("Bucket: {} - file name: {} - file size: {}", BUCKET, filename, request.getSize());
 
         final var pathFile = String.join("/", request.getPath(), filename);
@@ -90,8 +91,8 @@ public final class MinioService implements S3Service {
                     PutObjectArgs.builder()
                             .bucket(BUCKET)
                             .object(pathFile)
-                            .contentType(Optional.ofNullable(request.getContentType()).orElse("image/png; image/jpg;"))
-                            .stream(request.getInputStream(), request.getSize(), -1)
+                            .contentType(Optional.ofNullable(file.getContentType()).orElse("image/png; image/jpg;"))
+                            .stream(file.getInputStream(), file.getSize(), -1)
                             .build()
             );
             log.info("Response: {}", response);

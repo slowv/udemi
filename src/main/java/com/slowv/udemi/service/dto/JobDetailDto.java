@@ -10,4 +10,7 @@ public class JobDetailDto {
     String jobName;
     String jobGroup;
     String jobDescription;
+    String triggerName;
+    String triggerGroup;
+    String status;
 }
