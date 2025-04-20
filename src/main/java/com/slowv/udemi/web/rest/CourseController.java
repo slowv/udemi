@@ -1,10 +1,12 @@
 package com.slowv.udemi.web.rest;
 
 
+import com.slowv.udemi.service.dto.CourseRecord;
 import com.slowv.udemi.service.dto.RegisterCourseRecord;
 import com.slowv.udemi.service.dto.request.AddLessonRequest;
 import com.slowv.udemi.service.dto.request.AssignRegisterCourseRequest;
 import com.slowv.udemi.service.dto.request.ChangeStatusRequest;
+import com.slowv.udemi.service.dto.request.CourseSearchRequest;
 import com.slowv.udemi.service.dto.request.GetTotalAmountMonthRequest;
 import com.slowv.udemi.service.dto.request.RegisterCourseFilterRequest;
 import com.slowv.udemi.service.dto.response.PagingResponse;
@@ -27,6 +29,12 @@ import java.util.List;
  */
 @RequestMapping("/api/courses")
 public interface CourseController {
+
+    @PostMapping("/create")
+    Response<CourseRecord> create(@RequestBody @Valid CourseRecord course);
+
+    @PostMapping("/search")
+    Response<PagingResponse<CourseRecord>> search(@RequestBody @Valid CourseSearchRequest request);
 
     /**
      * Đăng ký khóa học

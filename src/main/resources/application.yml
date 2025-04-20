@@ -1,6 +1,11 @@
 spring:
   application:
     name: Udemi
+  main:
+    allow-bean-definition-overriding: true
+
+  elasticsearch:
+    uris: http://localhost:9200
 
   cache:
     type: redis

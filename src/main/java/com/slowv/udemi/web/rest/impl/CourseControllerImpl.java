@@ -1,17 +1,20 @@
 package com.slowv.udemi.web.rest.impl;
 
-import com.slowv.udemi.web.rest.CourseController;
 import com.slowv.udemi.entity.AccountEntity;
 import com.slowv.udemi.integration.mail.MailService;
+import com.slowv.udemi.service.CourseService;
 import com.slowv.udemi.service.RegisterCourseService;
+import com.slowv.udemi.service.dto.CourseRecord;
 import com.slowv.udemi.service.dto.RegisterCourseRecord;
 import com.slowv.udemi.service.dto.request.AddLessonRequest;
 import com.slowv.udemi.service.dto.request.AssignRegisterCourseRequest;
 import com.slowv.udemi.service.dto.request.ChangeStatusRequest;
+import com.slowv.udemi.service.dto.request.CourseSearchRequest;
 import com.slowv.udemi.service.dto.request.GetTotalAmountMonthRequest;
 import com.slowv.udemi.service.dto.request.RegisterCourseFilterRequest;
 import com.slowv.udemi.service.dto.response.PagingResponse;
 import com.slowv.udemi.service.dto.response.Response;
+import com.slowv.udemi.web.rest.CourseController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +30,17 @@ public class CourseControllerImpl implements CourseController {
     private final RegisterCourseService registerCourseService;
     private final MessageSource messageSource;
     private final MailService mailService;
+    private final CourseService courseService;
+
+    @Override
+    public Response<CourseRecord> create(final CourseRecord course) {
+        return Response.created(courseService.create(course));
+    }
+
+    @Override
+    public Response<PagingResponse<CourseRecord>> search(final CourseSearchRequest request) {
+        return Response.ok(PagingResponse.from(courseService.search(request)));
+    }
 
     @Override
     public Response<RegisterCourseRecord> register(final RegisterCourseRecord request) {

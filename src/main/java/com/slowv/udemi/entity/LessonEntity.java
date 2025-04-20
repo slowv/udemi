@@ -1,5 +1,6 @@
 package com.slowv.udemi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.slowv.udemi.entity.enums.CostType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Comment;
+import org.springframework.data.annotation.Transient;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -51,6 +53,8 @@ public class LessonEntity extends AbstractAuditingEntity<Long> implements Serial
     @Comment("Kiểu tính phí theo bài học hoặc theo số buổi")
     CostType costType = CostType.COURSE;
 
+    @JsonIgnore
+    @Transient
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     CourseEntity course;

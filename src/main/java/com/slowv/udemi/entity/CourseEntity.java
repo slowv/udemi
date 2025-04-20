@@ -20,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@Document(indexName = "course")
 @Table(name = "course")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CourseEntity extends AbstractAuditingEntity<Long> implements Serializable {
@@ -49,4 +51,9 @@ public class CourseEntity extends AbstractAuditingEntity<Long> implements Serial
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "course")
     List<LessonEntity> lessons = new ArrayList<>();
+
+    public void setLessons(List<LessonEntity> lessons) {
+        lessons.forEach(lesson -> lesson.setCourse(this));
+        this.lessons = lessons;
+    }
 }
