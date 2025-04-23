@@ -4,6 +4,17 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+  cloud:
+    function:
+      definition: sendTestKafka
+    stream:
+      bindings:
+        sendTestKafka-out-0:
+          destination: test-kafka
+      kafka:
+        binder:
+          brokers: localhost:9092
+
   elasticsearch:
     uris: http://localhost:9200
 
@@ -57,7 +68,7 @@ spring:
   quartz:
     job-store-type: jdbc
     jdbc:
-      initialize-schema: never
+      initialize-schema: always
     properties:
       org:
         quartz:
