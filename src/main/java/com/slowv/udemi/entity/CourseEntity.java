@@ -21,6 +21,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ public class CourseEntity extends AbstractAuditingEntity<Long> implements Serial
     @Column(name = "skill")
     List<TechSkill> skills;
 
+    @Field(type = FieldType.Nested)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "course")
     List<LessonEntity> lessons = new ArrayList<>();
 

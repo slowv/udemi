@@ -10,8 +10,6 @@ import com.slowv.udemi.service.dto.request.CourseSearchRequest;
 import com.slowv.udemi.service.mapper.CourseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.elasticsearch.core.query.Criteria;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +45,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Page<CourseRecord> search(final CourseSearchRequest request) {
-        return courseSearchRepository.search(CriteriaQuery.builder(Criteria.where("name")).build())
+        return courseSearchRepository.search(request.criteriaQuery())
                 .map(courseMapper::toDto);
     }
 }

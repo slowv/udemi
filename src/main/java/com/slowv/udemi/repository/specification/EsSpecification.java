@@ -1,9 +1,9 @@
 package com.slowv.udemi.repository.specification;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.Query;
 
 @FunctionalInterface
 public interface EsSpecification {
-    CriteriaQuery toQuery(Pageable pageable);
+    Query toQuery(Pageable pageable);
 }

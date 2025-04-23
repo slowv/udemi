@@ -1,7 +1,7 @@
 package com.slowv.udemi.service.dto.request;
 
-import org.springframework.data.elasticsearch.core.query.Criteria;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.client.elc.NativeQuery;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 public abstract class FilterDynamicRequest<T> {
     public abstract Specification<T> specification();
 
-    public CriteriaQuery criteriaQuery() {
-        return new CriteriaQuery(new Criteria());
+    public Query criteriaQuery() {
+        return new NativeQuery(co.elastic.clients.elasticsearch._types.query_dsl.Query.of(q -> q));
     }
 }

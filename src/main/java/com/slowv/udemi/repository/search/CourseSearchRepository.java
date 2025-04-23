@@ -9,7 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.scheduling.annotation.Async;
 
@@ -27,7 +27,7 @@ interface CourseInternalSearch {
     @Async
     void deleteFromIndex(CourseEntity entity);
 
-    Page<CourseEntity> search(CriteriaQuery criteria);
+    Page<CourseEntity> search(Query criteria);
 }
 
 @RequiredArgsConstructor
@@ -54,13 +54,34 @@ class CourseInternalSearchImpl implements CourseInternalSearch {
     }
 
     @Override
-    public Page<CourseEntity> search(final CriteriaQuery criteria) {
-        final var search = elasticsearchTemplate.search(criteria, CourseEntity.class);
+    public Page<CourseEntity> search(final Query query) {
+
+        final var queryStr = """
+                {
+                  "nested": {
+                    "path": "lessons",
+                    "query": {
+                      "wildcard": {
+                        "lessons.title": {
+                          "value": "*Coll*"
+                        }
+                      }
+                    },
+                    "score_mode": "none"
+                  }
+                }
+                """;
+
+        final var nativeQuery = new NativeQuery(
+                QueryStringQuery.of(qs -> qs.query(queryStr))._toQuery()
+        );
+
+        final var search = elasticsearchTemplate.search(nativeQuery, CourseEntity.class);
         final var content = search.stream()
                 .map(SearchHit::getContent)
                 .toList();
 
-        final var pageable = criteria.getPageable();
+        final var pageable = query.getPageable();
 
         return new PageImpl<>(content, pageable, search.getTotalHits());
     }

@@ -5,7 +5,7 @@ import com.slowv.udemi.entity.enums.TechSkill;
 import com.slowv.udemi.repository.specification.CourseSpecification;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class CourseSearchRequest extends FilterRequest<CourseEntity> {
     }
 
     @Override
-    public CriteriaQuery criteriaQuery() {
+    public Query criteriaQuery() {
         return builder()
                 .toQuery(this.getPaging().pageable());
     }
